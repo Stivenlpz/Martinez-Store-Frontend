@@ -17,7 +17,7 @@ export function ProductCard({ id, name, price, images }: ProductType) {
       >
         <div className="relative aspect-square">
           <Image
-            src={isHovered ? images[0] : images[1]}
+            src={isHovered ? images[1] : images[0]}
             alt={name}
             fill
             className="object-cover transition-opacity duration-300"
