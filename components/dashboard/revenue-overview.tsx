@@ -26,7 +26,7 @@ export function RevenueOverview() {
     <Card>
       <CardHeader>
         <CardTitle className="text-card-foreground">
-          Revenue This Week
+          Ganancia esta semana
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -37,16 +37,16 @@ export function RevenueOverview() {
             <YAxis className="text-muted-foreground" />
             <Tooltip
               contentStyle={{
-                backgroundColor: "hsl(var(--card))",
-                border: "1px solid hsl(var(--border))",
+                backgroundColor: "var(--color-card)",
+                border: "1px solid var(--color-border)",
                 borderRadius: "8px",
               }}
             />
             <Area
               type="monotone"
               dataKey="revenue"
-              stroke="hsl(var(--chart-1))"
-              fill="hsl(var(--chart-1))"
+              stroke="var(--color-chart-1)"
+              fill="var(--color-chart-1)"
               fillOpacity={0.2}
             />
           </AreaChart>

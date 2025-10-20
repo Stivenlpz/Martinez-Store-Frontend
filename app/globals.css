@@ -116,8 +116,25 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
+  }
+
+  [data-font-size="small"] body {
+    @apply text-sm;
+  }
+
+  [data-font-size="normal"] body {
+    @apply text-base;
+  }
+
+  [data-font-size="large"] body {
+    @apply text-lg;
+  }
+
+  [data-font-size="xlarge"] body {
+    @apply text-xl;
   }
 }
 
@@ -125,9 +142,11 @@
   0% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.5);
   }
+
   100% {
     transform: scale(1);
   }

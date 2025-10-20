@@ -36,16 +36,184 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
 }
 
 
+// Validate ../../app/(store)/cart/page.tsx
+{
+  const handler = {} as typeof import("../../app/(store)/cart/page.js")
+  handler satisfies AppPageConfig<"/cart">
+}
+
+// Validate ../../app/(store)/collections/page.tsx
+{
+  const handler = {} as typeof import("../../app/(store)/collections/page.js")
+  handler satisfies AppPageConfig<"/collections">
+}
+
+// Validate ../../app/(store)/contact/page.tsx
+{
+  const handler = {} as typeof import("../../app/(store)/contact/page.js")
+  handler satisfies AppPageConfig<"/contact">
+}
+
+// Validate ../../app/(store)/legal/page.tsx
+{
+  const handler = {} as typeof import("../../app/(store)/legal/page.js")
+  handler satisfies AppPageConfig<"/legal">
+}
+
+// Validate ../../app/(store)/orders/[id]/page.tsx
+{
+  const handler = {} as typeof import("../../app/(store)/orders/[id]/page.js")
+  handler satisfies AppPageConfig<"/orders/[id]">
+}
+
+// Validate ../../app/(store)/orders/page.tsx
+{
+  const handler = {} as typeof import("../../app/(store)/orders/page.js")
+  handler satisfies AppPageConfig<"/orders">
+}
+
 // Validate ../../app/(store)/page.tsx
 {
   const handler = {} as typeof import("../../app/(store)/page.js")
   handler satisfies AppPageConfig<"/">
 }
 
+// Validate ../../app/(store)/payment/failure/page.tsx
+{
+  const handler = {} as typeof import("../../app/(store)/payment/failure/page.js")
+  handler satisfies AppPageConfig<"/payment/failure">
+}
+
+// Validate ../../app/(store)/payment/success/page.tsx
+{
+  const handler = {} as typeof import("../../app/(store)/payment/success/page.js")
+  handler satisfies AppPageConfig<"/payment/success">
+}
+
+// Validate ../../app/(store)/products/[id]/page.tsx
+{
+  const handler = {} as typeof import("../../app/(store)/products/[id]/page.js")
+  handler satisfies AppPageConfig<"/products/[id]">
+}
+
+// Validate ../../app/(store)/profile/page.tsx
+{
+  const handler = {} as typeof import("../../app/(store)/profile/page.js")
+  handler satisfies AppPageConfig<"/profile">
+}
+
+// Validate ../../app/auth/activate/[id]/page.tsx
+{
+  const handler = {} as typeof import("../../app/auth/activate/[id]/page.js")
+  handler satisfies AppPageConfig<"/auth/activate/[id]">
+}
+
+// Validate ../../app/auth/login/page.tsx
+{
+  const handler = {} as typeof import("../../app/auth/login/page.js")
+  handler satisfies AppPageConfig<"/auth/login">
+}
+
 // Validate ../../app/auth/register/page.tsx
 {
   const handler = {} as typeof import("../../app/auth/register/page.js")
   handler satisfies AppPageConfig<"/auth/register">
+}
+
+// Validate ../../app/auth/request-reset/page.tsx
+{
+  const handler = {} as typeof import("../../app/auth/request-reset/page.js")
+  handler satisfies AppPageConfig<"/auth/request-reset">
+}
+
+// Validate ../../app/auth/reset-password/[id]/page.tsx
+{
+  const handler = {} as typeof import("../../app/auth/reset-password/[id]/page.js")
+  handler satisfies AppPageConfig<"/auth/reset-password/[id]">
+}
+
+// Validate ../../app/dashboard/analytics/page.tsx
+{
+  const handler = {} as typeof import("../../app/dashboard/analytics/page.js")
+  handler satisfies AppPageConfig<"/dashboard/analytics">
+}
+
+// Validate ../../app/dashboard/orders/[id]/edit/page.tsx
+{
+  const handler = {} as typeof import("../../app/dashboard/orders/[id]/edit/page.js")
+  handler satisfies AppPageConfig<"/dashboard/orders/[id]/edit">
+}
+
+// Validate ../../app/dashboard/orders/[id]/page.tsx
+{
+  const handler = {} as typeof import("../../app/dashboard/orders/[id]/page.js")
+  handler satisfies AppPageConfig<"/dashboard/orders/[id]">
+}
+
+// Validate ../../app/dashboard/orders/page.tsx
+{
+  const handler = {} as typeof import("../../app/dashboard/orders/page.js")
+  handler satisfies AppPageConfig<"/dashboard/orders">
+}
+
+// Validate ../../app/dashboard/page.tsx
+{
+  const handler = {} as typeof import("../../app/dashboard/page.js")
+  handler satisfies AppPageConfig<"/dashboard">
+}
+
+// Validate ../../app/dashboard/products/[id]/edit/page.tsx
+{
+  const handler = {} as typeof import("../../app/dashboard/products/[id]/edit/page.js")
+  handler satisfies AppPageConfig<"/dashboard/products/[id]/edit">
+}
+
+// Validate ../../app/dashboard/products/[id]/page.tsx
+{
+  const handler = {} as typeof import("../../app/dashboard/products/[id]/page.js")
+  handler satisfies AppPageConfig<"/dashboard/products/[id]">
+}
+
+// Validate ../../app/dashboard/products/new/page.tsx
+{
+  const handler = {} as typeof import("../../app/dashboard/products/new/page.js")
+  handler satisfies AppPageConfig<"/dashboard/products/new">
+}
+
+// Validate ../../app/dashboard/products/page.tsx
+{
+  const handler = {} as typeof import("../../app/dashboard/products/page.js")
+  handler satisfies AppPageConfig<"/dashboard/products">
+}
+
+// Validate ../../app/dashboard/users/[id]/edit/page.tsx
+{
+  const handler = {} as typeof import("../../app/dashboard/users/[id]/edit/page.js")
+  handler satisfies AppPageConfig<"/dashboard/users/[id]/edit">
+}
+
+// Validate ../../app/dashboard/users/[id]/orders/page.tsx
+{
+  const handler = {} as typeof import("../../app/dashboard/users/[id]/orders/page.js")
+  handler satisfies AppPageConfig<"/dashboard/users/[id]/orders">
+}
+
+// Validate ../../app/dashboard/users/[id]/page.tsx
+{
+  const handler = {} as typeof import("../../app/dashboard/users/[id]/page.js")
+  handler satisfies AppPageConfig<"/dashboard/users/[id]">
+}
+
+// Validate ../../app/dashboard/users/new/page.tsx
+{
+  const handler = {} as typeof import("../../app/dashboard/users/new/page.js")
+  handler satisfies AppPageConfig<"/dashboard/users/new">
+}
+
+// Validate ../../app/dashboard/users/page.tsx
+{
+  const handler = {} as typeof import("../../app/dashboard/users/page.js")
+  handler satisfies AppPageConfig<"/dashboard/users">
 }
 
 
@@ -58,6 +226,12 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
 {
   const handler = {} as typeof import("../../app/(store)/layout.js")
   handler satisfies LayoutConfig<"/">
+}
+
+// Validate ../../app/dashboard/layout.tsx
+{
+  const handler = {} as typeof import("../../app/dashboard/layout.js")
+  handler satisfies LayoutConfig<"/dashboard">
 }
 
 // Validate ../../app/layout.tsx

@@ -14,10 +14,12 @@ import {
 import { LoginDialog } from "../auth/login-dialog";
 import { useMarketStore } from "@/store/useMarketStore";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export function ProfileButton() {
   const { isAuth, user, logout } = useMarketStore((state) => state);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const router = useRouter();
 
   const handleOpenLogin = () => {
     setIsLoginOpen(true);
@@ -25,6 +27,7 @@ export function ProfileButton() {
 
   const handleLogOut = () => {
     logout();
+    router.push("/");
   };
 
   return (
@@ -42,32 +45,37 @@ export function ProfileButton() {
             <DropdownMenuSeparator />
             {user.role === "ADMIN" && (
               <>
-                <DropdownMenuLabel>Admin Options</DropdownMenuLabel>
+                <DropdownMenuLabel>Opciones de Administrador</DropdownMenuLabel>
                 <DropdownMenuItem>
                   <Link href="/dashboard">Dashboard</Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
               </>
             )}
-            <DropdownMenuLabel>Profile Options</DropdownMenuLabel>
-            <DropdownMenuItem>Profile</DropdownMenuItem>
+            <DropdownMenuLabel>Opciones de Perfil</DropdownMenuLabel>
             <DropdownMenuItem>
-              <Link href="/orders">Orders</Link>
+              <Link href="/profile">Perfil</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href="/orders">Ordenes</Link>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogOut}>Logout</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogOut}>
+              Cerrar Sesion
+            </DropdownMenuItem>
           </DropdownMenuContent>
         ) : (
           <DropdownMenuContent>
-            <DropdownMenuLabel>Auth Options</DropdownMenuLabel>
+            <DropdownMenuLabel>Opciones de Autenticacion</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleOpenLogin}>Login</DropdownMenuItem>
             <DropdownMenuItem>
-              <Link href="/auth/register">Register</Link>
+              <Link href="/auth/register">Registrarse</Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Contact</DropdownMenuItem>
+            <DropdownMenuItem>
+              <Link href="/contact">Contacto</Link>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         )}
       </DropdownMenu>

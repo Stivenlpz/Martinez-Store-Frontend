@@ -3,45 +3,29 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import {
-  LayoutDashboard,
-  Package,
-  Users,
-  ShoppingCart,
-  BarChart3,
-  Settings,
-} from "lucide-react";
+import { LayoutDashboard, Package, Users, ShoppingCart } from "lucide-react";
+import { Logo } from "../navbar/logo";
 
 const navigation = [
   {
-    name: "Overview",
+    name: "General",
     href: "/dashboard",
     icon: LayoutDashboard,
   },
   {
-    name: "Products",
+    name: "Productos",
     href: "/dashboard/products",
     icon: Package,
   },
   {
-    name: "Users",
+    name: "Usuarios",
     href: "/dashboard/users",
     icon: Users,
   },
   {
-    name: "Orders",
+    name: "Ordenes",
     href: "/dashboard/orders",
     icon: ShoppingCart,
-  },
-  {
-    name: "Analytics",
-    href: "/dashboard/analytics",
-    icon: BarChart3,
-  },
-  {
-    name: "Settings",
-    href: "/dashboard/settings",
-    icon: Settings,
   },
 ];
 
@@ -50,12 +34,8 @@ export function Sidebar() {
 
   return (
     <div className="w-64 bg-sidebar border-r border-sidebar-border">
-      <div className="p-6">
-        <Link href="/">
-          <h1 className="text-xl font-bold text-sidebar-foreground">
-            Market Admin Dashboard
-          </h1>
-        </Link>
+      <div className="w-full flex items-center justify-center">
+        <Logo />
       </div>
       <nav className="px-4 space-y-2">
         {navigation.map((item) => {

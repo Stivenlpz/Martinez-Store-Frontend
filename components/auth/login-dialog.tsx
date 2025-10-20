@@ -19,16 +19,22 @@ import {
 } from "@/components/ui/form";
 import { useMarketStore } from "@/store/useMarketStore";
 import { apiFetch } from "@/lib/api";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   email: z.email({
-    message: "email must be a valid email",
+    message: "El email debe ser un email valido",
   }),
   password: z.string().min(6, {
-    message: "Password must be at least 6 characters.",
+    message: "La contraseña dedbe tener minimo 6 caracteres.",
+  }),
+  captchaToken: z.string().min(1, {
+    message: "Por favor completa el captcha ",
   }),
 });
 
@@ -40,12 +46,15 @@ interface Props {
 export function LoginDialog({ isOpen, setIsOpen }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const { setIsAuth } = useMarketStore((state) => state);
+  const recaptchaRef = useRef<HCaptcha>(null);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
       password: "",
+      captchaToken: "",
     },
   });
 
@@ -59,21 +68,39 @@ export function LoginDialog({ isOpen, setIsOpen }: Props) {
       form.reset();
       setIsOpen(false);
       setIsAuth(true);
-      toast.success("Login successful");
+      toast.success("Login exitoso");
+      router.refresh();
     } catch (error) {
       console.error("error in login dialog", error);
       toast.error(`${error}`);
     } finally {
+      resetCaptcha();
       setIsLoading(false);
     }
   }
+
+  const handleCaptchaChange = (token: string | null) => {
+    if (token) {
+      form.setValue("captchaToken", token);
+      form.clearErrors("captchaToken");
+    } else {
+      form.setValue("captchaToken", "");
+    }
+  };
+
+  const resetCaptcha = () => {
+    if (recaptchaRef.current) {
+      recaptchaRef.current.resetCaptcha();
+    }
+    form.setValue("captchaToken", "");
+  };
 
   return (
     <ResponsiveDialog
       isOpen={isOpen}
       setIsOpen={setIsOpen}
       title="Login"
-      description="Login into your profile account."
+      description="Ingresa a tu cuenta"
     >
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -82,11 +109,13 @@ export function LoginDialog({ isOpen, setIsOpen }: Props) {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel>Correo Electronico</FormLabel>
                 <FormControl>
                   <Input placeholder="jhon@email.com" {...field} />
                 </FormControl>
-                <FormDescription>This is your user email.</FormDescription>
+                <FormDescription>
+                  Aqui va el email de tu cuenta.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -96,22 +125,61 @@ export function LoginDialog({ isOpen, setIsOpen }: Props) {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel>Contraseña</FormLabel>
                 <FormControl>
                   <Input type="password" placeholder="password" {...field} />
                 </FormControl>
-                <FormDescription>This is your user password.</FormDescription>
+                <FormDescription>Contraseña de tu cuenta.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="captchaToken"
+            render={() => (
+              <FormItem>
+                <FormLabel>Verificacion</FormLabel>
+                <FormControl>
+                  <div className="flex justify-center">
+                    <HCaptcha
+                      sitekey={
+                        process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY ||
+                        "your-site-key"
+                      }
+                      onVerify={(token) => handleCaptchaChange(token)}
+                      onExpire={() => handleCaptchaChange(null)}
+                      onError={() => handleCaptchaChange(null)}
+                    />
+                  </div>
+                </FormControl>
+                <FormDescription>
+                  Por favor verifica que no eres un robot.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="text-xs flex flex-col items-start justify-start">
+            <Button size="sm" variant="link" asChild>
+              <Link href="/auth/request-reset">Olvidaste tu contraseña</Link>
+            </Button>
+            <Button size="sm" variant="link" asChild>
+              <Link href="/auth/register">Aun no tienes una cuenta?</Link>
+            </Button>
+            <Button size="sm" variant="link" asChild>
+              <Link href="/legal">Politicas y Privacidad</Link>
+            </Button>
+          </div>
+
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline">Cancelar</Button>
             </DialogClose>
             <Button type="submit" disabled={isLoading}>
               {isLoading && <Loader2 className="size-4 animate-spin" />}
-              Submit
+              Login
             </Button>
           </DialogFooter>
         </form>

@@ -165,3 +165,26 @@ export interface OrderItemType {
   order: OrderType;
   product: ProductType;
 }
+
+export interface StatsCardsType {
+  products: {
+    title: string;
+    value: number;
+    lastMonth: number;
+  };
+  users: {
+    title: string;
+    value: number;
+    lastMonth: number;
+  };
+  orders: {
+    title: string;
+    value: number;
+    lastMonth: number;
+  };
+  revenue: {
+    title: string;
+    value: number;
+    lastMonth: number;
+  };
+}

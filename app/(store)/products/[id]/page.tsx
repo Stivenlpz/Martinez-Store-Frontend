@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { apiFetch } from "@/lib/api";
 import { useParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
+import { SizeGuideModal } from "@/components/products/size-guide-modal";
 
 export default function ProductPage() {
   const [product, setProduct] = useState<ProductType | null>(null);
@@ -101,13 +102,9 @@ export default function ProductPage() {
     }
   };
 
-  const handleBuyNow = () => {
-    // implementar flujo de compra
-  };
-
   return (
-    <div className="flex min-h-screen">
-      <div className="w-1/2 sticky top-0 h-screen overflow-y-auto bg-background flex items-center p-20">
+    <div className="flex flex-col md:flex-row min-h-screen">
+      <div className="md:w-1/2 md:sticky top-0 h-screen overflow-y-auto bg-background flex items-center p-10 md:p-20">
         <div className="mx-auto w-full space-y-6">
           <div className="space-y-2">
             <h1 className="text-3xl font-bold tracking-tight text-balance">
@@ -127,7 +124,7 @@ export default function ProductPage() {
             </p>
             <p className="text-sm text-muted-foreground">
               {typeof product.stock === "number"
-                ? `${product.stock} in stock`
+                ? `${product.stock} en stock`
                 : null}
             </p>
           </div>
@@ -150,9 +147,8 @@ export default function ProductPage() {
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-medium">Size</h3>
-              <button className="text-sm text-primary underline">
-                Size guide
-              </button>
+
+              <SizeGuideModal />
             </div>
             <div className="grid grid-cols-4 gap-2">
               {product.sizes.map((size) => (
@@ -169,7 +165,7 @@ export default function ProductPage() {
 
           {/* Quantity control */}
           <div className="flex items-center gap-3">
-            <span className="text-sm font-medium">Quantity</span>
+            <span className="text-sm font-medium">Cantidad</span>
 
             <div className="inline-flex items-center rounded-md border">
               <Button
@@ -204,35 +200,40 @@ export default function ProductPage() {
 
             {maxAvailable !== Infinity && (
               <span className="text-xs text-muted-foreground">
-                ({maxAvailable} available)
+                ({maxAvailable} disponible)
               </span>
             )}
           </div>
 
           <div className="space-y-3 flex gap-2">
-            <Button className="w-full" onClick={handleBuyNow}>
-              Buy Product
+            <Button
+              className="w-full"
+              onClick={handleAddToCart}
+              disabled={product.stock <= 0}
+            >
+              Comprar producto
             </Button>
             <Button
               size="icon"
               onClick={handleAddToCart}
               className="flex items-center gap-2"
+              disabled={product.stock <= 0}
             >
               <ShoppingCart className="size-4" />
             </Button>
           </div>
 
-          <div className="space-y-2 text-sm text-muted-foreground">
+          <pre className="space-y-2 text-sm text-muted-foreground">
             {product.description}
-          </div>
+          </pre>
         </div>
       </div>
 
       {/* Right Column - Scrollable Images */}
-      <div className="w-1/2 bg-muted/30">
-        <div className="space-y-1">
+      <div className="md:w-1/2 bg-muted/30">
+        <div className="space-y-1 flex gap-8 overflow-auto md:flex-col">
           {product.images.map((image, index) => (
-            <div key={index} className="relative aspect-[3/4] w-full">
+            <div key={index} className="relative aspect-[3/4] w-full min-w-48">
               <Image
                 src={image || "/placeholder.svg"}
                 alt={`${product.name} - View ${index + 1}`}

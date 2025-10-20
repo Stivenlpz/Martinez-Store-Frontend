@@ -32,6 +32,8 @@ import { X, Plus, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { apiFetch } from "@/lib/api";
 import { toast } from "sonner";
+import Image from "next/image";
+import { CldUploadWidget } from "next-cloudinary";
 
 // Schema de validación con Zod
 const productFormSchema = z.object({
@@ -473,28 +475,25 @@ export function ProductForm({ productId }: ProductFormProps) {
                   <FormItem>
                     <FormLabel>Image URLs</FormLabel>
                     <div className="flex gap-2">
-                      <Input
-                        value={newImage}
-                        onChange={(e) => setNewImage(e.target.value)}
-                        placeholder="Add image URL"
-                        onKeyPress={(e) => {
-                          if (e.key === "Enter") {
-                            e.preventDefault();
-                            addArrayItem("images", newImage);
-                            setNewImage("");
-                          }
-                        }}
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => {
-                          addArrayItem("images", newImage);
-                          setNewImage("");
+                      <CldUploadWidget
+                        uploadPreset="ml_default"
+                        onSuccess={(result) => {
+                          //@ts-expect-error secure_url is missing in types
+                          addArrayItem("images", result.info.secure_url);
                         }}
                       >
-                        <Plus className="h-4 w-4" />
-                      </Button>
+                        {({ open }) => (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => {
+                              open();
+                            }}
+                          >
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        )}
+                      </CldUploadWidget>
                     </div>
                     <div className="space-y-2">
                       {field.value?.map((image, index) => (
@@ -502,10 +501,12 @@ export function ProductForm({ productId }: ProductFormProps) {
                           key={index}
                           className="flex items-center gap-2 p-2 border rounded"
                         >
-                          <img
-                            src={image || "/placeholder.svg"}
+                          <Image
+                            src={image || "https://placehold.co/48"}
                             alt={`Product ${index + 1}`}
-                            className="w-12 h-12 object-cover rounded"
+                            className="size-12 object-cover rounded"
+                            width={48}
+                            height={48}
                           />
                           <span className="flex-1 text-sm truncate">
                             {image}

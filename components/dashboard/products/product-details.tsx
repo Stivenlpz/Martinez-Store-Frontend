@@ -119,7 +119,7 @@ export function ProductDetails({ productId }: ProductDetailsProps) {
               <h3 className="font-semibold text-card-foreground mb-2">
                 Description
               </h3>
-              <p className="text-muted-foreground">{product.description}</p>
+              <pre className="text-muted-foreground">{product.description}</pre>
             </div>
 
             <div className="grid grid-cols-2 gap-4">

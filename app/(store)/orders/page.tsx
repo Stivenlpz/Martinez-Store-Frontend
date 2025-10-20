@@ -77,12 +77,12 @@ export default function OrdersPage() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen py-8 my-20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">My Orders</h1>
-          <p className="text-gray-600">Track and manage your order history</p>
+          <h1 className="text-3xl font-bold mb-2">Mis Ordenes</h1>
+          <p className="">Mira tu historial de ordenes de compra.</p>
         </div>
 
         {/* Filters */}
@@ -103,11 +103,11 @@ export default function OrdersPage() {
                   <SelectValue placeholder="Filter by status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Orders</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
-                  <SelectItem value="processing">Processing</SelectItem>
-                  <SelectItem value="completed">Completed</SelectItem>
-                  <SelectItem value="cancelled">Cancelled</SelectItem>
+                  <SelectItem value="all">Todas las ordenes</SelectItem>
+                  <SelectItem value="pending">Pendientes</SelectItem>
+                  <SelectItem value="processing">Procesando</SelectItem>
+                  <SelectItem value="completed">Completadas</SelectItem>
+                  <SelectItem value="cancelled">Canceladas</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -119,12 +119,12 @@ export default function OrdersPage() {
           {filteredOrders.length === 0 ? (
             <Card>
               <CardContent className="p-12 text-center">
-                <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  No orders found
+                <Package className="size-12 mx-auto mb-4" />
+                <h3 className="text-lg font-medium mb-2">
+                  No se encontraron ordenes
                 </h3>
-                <p className="text-gray-600">
-                  Try adjusting your search or filter criteria
+                <p className="text-muted-foreground">
+                  Intenta ajustando tus criterios de busqueda.
                 </p>
               </CardContent>
             </Card>
@@ -139,23 +139,21 @@ export default function OrdersPage() {
                     {/* Order Info */}
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <h3 className="font-semibold text-gray-900">
-                          Order #{order.id}
-                        </h3>
+                        <h3 className="font-semibold">Order #{order.id}</h3>
                         <Badge className={getStatusColor(order.status)}>
                           {order.status}
                         </Badge>
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm text-gray-600">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
                         <div className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4" />
+                          <Calendar className="size-4" />
                           <span>
                             {new Date(order.createdAt).toLocaleDateString()}
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <CreditCard className="h-4 w-4" />
+                          <CreditCard className="size-4" />
                           <Badge
                             className={getStatusColor(order.paymentStatus)}
                           >
@@ -163,7 +161,7 @@ export default function OrdersPage() {
                           </Badge>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Truck className="h-4 w-4" />
+                          <Truck className="size-4" />
                           <Badge
                             className={getStatusColor(order.shippingStatus)}
                           >
@@ -174,7 +172,7 @@ export default function OrdersPage() {
 
                       {/* Items Preview */}
                       <div className="mt-3">
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm">
                           {order.items.length} item
                           {order.items.length > 1 ? "s" : ""}:{" "}
                           {order.items
@@ -188,7 +186,7 @@ export default function OrdersPage() {
 
                       {order.shippingTrackingNumber && (
                         <div className="mt-2">
-                          <p className="text-sm text-gray-600">
+                          <p className="text-sm">
                             Tracking:{" "}
                             <span className="font-mono">
                               {order.shippingTrackingNumber}
@@ -200,7 +198,7 @@ export default function OrdersPage() {
 
                     <div className="flex flex-col sm:flex-row lg:flex-col items-start sm:items-center lg:items-end gap-3">
                       <div className="text-right">
-                        <p className="text-2xl font-bold text-gray-900">
+                        <p className="text-2xl font-bold">
                           {order.totalAmount.toLocaleString("en-US", {
                             currency: order.currency,
                             style: "currency",
@@ -214,7 +212,7 @@ export default function OrdersPage() {
                           className="flex items-center gap-2 bg-transparent"
                         >
                           <Eye className="h-4 w-4" />
-                          View Details
+                          Ver detalles
                         </Button>
                       </Link>
                     </div>

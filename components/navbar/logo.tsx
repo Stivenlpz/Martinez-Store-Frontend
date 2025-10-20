@@ -4,15 +4,14 @@ import Link from "next/link";
 export function Logo() {
   return (
     <Link href="/">
-      <div className="relative w-24 h-24">
-        <Image
-          src="/logo.png"
-          alt="SDFM 2520"
-          fill
-          className="object-contain invert"
-          priority
-        />
-      </div>
+      <Image
+        src="/logo.png"
+        alt="SDFM 2520"
+        width={200}
+        height={200}
+        priority
+        className="object-contain dark:invert"
+      />
     </Link>
   );
 }

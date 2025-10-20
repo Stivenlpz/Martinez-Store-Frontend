@@ -1,7 +1,9 @@
 import { Navbar } from "@/components/navbar/navbar";
 import { Footer } from "@/components/layout/footer";
-import { SplashScreen } from "@/components/layout/splash-screen";
 import { AutoLogout } from "@/components/layout/auto-logout";
+import { SplashScreen } from "@/components/layout/splash-screen";
+import { AccessibilityMenu } from "@/components/layout/accessibilty-menu";
+import { WhatsappButton } from "@/components/layout/whatsapp-button";
 
 export default function StoreLayout({
   children,
@@ -15,6 +17,8 @@ export default function StoreLayout({
       <div className="">{children}</div>
       <Footer />
       <AutoLogout />
+      <AccessibilityMenu />
+      <WhatsappButton />
     </>
   );
 }

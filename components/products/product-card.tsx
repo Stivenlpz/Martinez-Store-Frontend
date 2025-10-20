@@ -5,7 +5,7 @@ import { useState } from "react";
 import { ProductType } from "@/types/types";
 import Link from "next/link";
 
-export function ProductCard({ id, name, price, images }: ProductType) {
+export function ProductCard({ id, name, price, images, stock }: ProductType) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -28,12 +28,17 @@ export function ProductCard({ id, name, price, images }: ProductType) {
         <div className="p-4">
           <h3 className="text-lg font-semibold">{name}</h3>
           <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <span className="px-3 py-1 rounded-full text-sm font-medium">
+            <span className="rounded-full text-sm font-medium">
               {price.toLocaleString("en-US", {
                 style: "currency",
                 currency: "COP",
               })}
             </span>
+            {stock <= 0 && (
+              <span className="text-bolder text-yellow-700 text-xs">
+                SIN STOCK
+              </span>
+            )}
           </div>
         </div>
       </div>
