@@ -79,12 +79,10 @@ export default function RegisterPage() {
 
       const { confirmPassword, ...registerData } = values;
 
-      const response = await apiFetch("/auth/register", {
+      await apiFetch("/auth/register", {
         method: "POST",
         data: registerData,
       });
-
-      console.log(response);
 
       form.reset();
       toast.success(

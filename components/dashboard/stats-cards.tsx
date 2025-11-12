@@ -1,4 +1,5 @@
 "use client";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { apiFetch } from "@/lib/api";
 import { StatsCardsType } from "@/types/types";
@@ -12,8 +13,8 @@ import {
   LucideIcon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
-import { Skeleton } from "../ui/skeleton";
 
 export function StatsCards() {
   const [stats, setStats] = useState<StatsCardsType | null>(null);
@@ -21,7 +22,6 @@ export function StatsCards() {
   const fetchStats = async () => {
     try {
       const data = await apiFetch("/stats");
-      console.log(data);
       setStats(data);
     } catch (error) {
       console.error(error);

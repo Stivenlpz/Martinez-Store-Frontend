@@ -7,15 +7,20 @@ import Image from "next/image";
 import { ProductType, UserType } from "@/types/types";
 import { toast } from "sonner";
 import { apiFetch } from "@/lib/api";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { SizeGuideModal } from "@/components/products/size-guide-modal";
+import { PageLoader } from "@/components/layout/page-loader";
+import { ProductCommentsSection } from "@/components/products/product-comments-section";
+import { useMarketStore } from "@/store/useMarketStore";
 
 export default function ProductPage() {
+  const { isAuth } = useMarketStore((state) => state);
   const [product, setProduct] = useState<ProductType | null>(null);
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string | undefined>();
   const [quantity, setQuantity] = useState(1);
+  const router = useRouter();
 
   const { id } = useParams();
 
@@ -25,7 +30,6 @@ export default function ProductPage() {
         const data = await apiFetch(`/products/${id}`);
         setProduct(data);
 
-        // Set sensible defaults when editing / loading product
         if (data) {
           if (Array.isArray(data.sizes) && data.sizes.length > 0) {
             setSelectedSize((prev) => prev || data.sizes[0]);
@@ -45,7 +49,7 @@ export default function ProductPage() {
     fetchProduct();
   }, [id]);
 
-  if (!product) return <p>Product not found</p>;
+  if (!product) return <PageLoader />;
 
   const maxAvailable =
     typeof product.stock === "number" ? product.stock : Infinity;
@@ -67,24 +71,30 @@ export default function ProductPage() {
 
   const handleAddToCart = async () => {
     if (!selectedSize) {
-      toast.error("Please select a size");
+      toast.error("Por favor selecciona una talla");
       return;
     }
     if (!selectedColor) {
-      toast.error("Please select a color");
+      toast.error("Por favor selecciona un color");
       return;
     }
     if (quantity < 1) {
-      toast.error("Quantity must be at least 1");
+      toast.error("La cantidad minima debe ser 1");
       return;
     }
     if (quantity > maxAvailable) {
-      toast.error("Requested quantity exceeds stock");
+      toast.error("La cantidad solicitada supera el stock actual");
       return;
     }
 
     try {
       const user: UserType = await apiFetch("/users/me");
+      if (user.addresses.length == 0) {
+        toast("Registra tu direccion de envio antes de agregar al carrito");
+        router.push("/profile");
+        return;
+      }
+
       const data = {
         cartId: user.cart!.id,
         productId: product.id,
@@ -95,7 +105,7 @@ export default function ProductPage() {
       };
 
       await apiFetch("/cart-items", { method: "POST", data });
-      toast.success("product added to cart successfully.");
+      toast.success("Producto agregado al carrito exitosamente");
     } catch (error) {
       console.error(error);
       toast.error("error adding product to cart.");
@@ -104,7 +114,7 @@ export default function ProductPage() {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen">
-      <div className="md:w-1/2 md:sticky top-0 h-screen overflow-y-auto bg-background flex items-center p-10 md:p-20">
+      <div className="md:w-1/2 md:sticky top-0 h-screen overflow-y-auto bg-background flex items-center mt-20 px-32">
         <div className="mx-auto w-full space-y-6">
           <div className="space-y-2">
             <h1 className="text-3xl font-bold tracking-tight text-balance">
@@ -226,6 +236,8 @@ export default function ProductPage() {
           <pre className="space-y-2 text-sm text-muted-foreground">
             {product.description}
           </pre>
+
+          <ProductCommentsSection productId={product.id} />
         </div>
       </div>
 
@@ -233,7 +245,7 @@ export default function ProductPage() {
       <div className="md:w-1/2 bg-muted/30">
         <div className="space-y-1 flex gap-8 overflow-auto md:flex-col">
           {product.images.map((image, index) => (
-            <div key={index} className="relative aspect-[3/4] w-full min-w-48">
+            <div key={index} className="relative aspect-3/4 w-full min-w-48">
               <Image
                 src={image || "/placeholder.svg"}
                 alt={`${product.name} - View ${index + 1}`}

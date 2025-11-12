@@ -7,10 +7,10 @@ import { Separator } from "@/components/ui/separator";
 import { Minus, Plus, X, ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { CartItemType, CartType } from "@/types/types";
 import { toast } from "sonner";
 import { apiFetch } from "@/lib/api";
 import { useRouter } from "next/navigation";
+import type { CartItemType, CartType } from "@/types/types";
 
 interface Props {
   cart: CartType;
@@ -21,9 +21,17 @@ export default function CartView({ cart }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const updateQuantity = async (itemId: string, newQuantity: number) => {
+  const updateQuantity = async (item: CartItemType, newQuantity: number) => {
+    const itemId = item.id;
+    const stock = item.product.stock;
+
     if (newQuantity <= 0) {
       removeItem(itemId);
+      return;
+    }
+
+    if (newQuantity > stock) {
+      toast.error("No hay suficiente stock disponible.");
       return;
     }
 
@@ -35,27 +43,28 @@ export default function CartView({ cart }: Props) {
         data: { quantity: newQuantity },
       });
 
-      setItems(
-        items.map((item) =>
+      setItems((prev) =>
+        prev.map((item) =>
           item.id === itemId ? { ...item, quantity: newQuantity } : item,
         ),
       );
     } catch (error) {
       console.error(error);
-      toast.error("Error updating item quantity.");
+      toast.error("Error actualizando la cantidad");
     } finally {
       toast.dismiss();
       setIsLoading(false);
     }
   };
+
   const removeItem = async (itemId: string) => {
     try {
       await apiFetch(`/cart-items/${itemId}`, { method: "DELETE" });
-      setItems(items.filter((item) => item.id !== itemId));
-      toast.success("successfully cart item removed.");
+      setItems((prev) => prev.filter((item) => item.id !== itemId));
+      toast.success("Producto eliminado exitosamente");
     } catch (error) {
       console.error(error);
-      toast.error("error removing cart item.");
+      toast.error("Error eliminado producto del carrito");
     }
   };
 
@@ -86,7 +95,7 @@ export default function CartView({ cart }: Props) {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-7xl mt-32">
+    <div className="container mx-auto px-4 py-8 max-w-7xl mt-18">
       <div className="flex items-center gap-4 mb-8">
         <Link
           href="/"
@@ -120,8 +129,7 @@ export default function CartView({ cart }: Props) {
               {items.map((item) => (
                 <Card key={item.id} className="p-6">
                   <div className="flex gap-4">
-                    {/* Product Image */}
-                    <div className="relative w-24 h-32 flex-shrink-0">
+                    <div className="relative w-24 h-32 shrink-0">
                       <Image
                         src={item.product.images[0] || "/placeholder.svg"}
                         alt={item.product.name}
@@ -166,7 +174,7 @@ export default function CartView({ cart }: Props) {
                             size="icon"
                             disabled={isLoading}
                             onClick={() =>
-                              updateQuantity(item.id, item.quantity - 1)
+                              updateQuantity(item, item.quantity - 1)
                             }
                             className="h-8 w-8"
                           >
@@ -178,9 +186,11 @@ export default function CartView({ cart }: Props) {
                           <Button
                             variant="outline"
                             size="icon"
-                            disabled={isLoading}
+                            disabled={
+                              isLoading || item.quantity >= item.product.stock
+                            }
                             onClick={() =>
-                              updateQuantity(item.id, item.quantity + 1)
+                              updateQuantity(item, item.quantity + 1)
                             }
                             className="h-8 w-8"
                           >
@@ -246,7 +256,7 @@ export default function CartView({ cart }: Props) {
               </div>
             </div>
 
-            <div className="space-y-3 pt-2">
+            <div>
               <Button
                 onClick={handleCheckout}
                 className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-6 text-base font-medium"
@@ -256,10 +266,10 @@ export default function CartView({ cart }: Props) {
               </Button>
             </div>
 
-            <div className="text-xs text-muted-foreground space-y-1 pt-2">
-              <p>• Compra seguras, protegidas con SSL</p>
-              <p>• 30-dias politica de rembolso</p>
-              <p>• Free returns on all orders</p>
+            <div className="text-xs text-muted-foreground space-y-1">
+              <p>Compra seguras, protegidas con SSL</p>
+              <p>30 dias politica de rembolso</p>
+              <p>Devoluciones gratuitas en todos los pedidos</p>
             </div>
           </Card>
         </div>

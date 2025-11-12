@@ -23,6 +23,8 @@ import { OrderType } from "@/types/types";
 import { apiFetch } from "@/lib/api";
 import { toast } from "sonner";
 import { useParams } from "next/navigation";
+import { PageLoader } from "@/components/layout/page-loader";
+import { Spinner } from "@/components/ui/spinner";
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -41,30 +43,32 @@ const getStatusColor = (status: string) => {
     case "REFUNDED":
       return "bg-red-100 text-red-800";
     default:
-      return "bg-gray-100 text-gray-800";
+      return "bg-muted text-muted-foreground";
   }
 };
 
 export default function OrderDetailPage() {
   const [order, setOrder] = useState<OrderType | null>(null);
   const [trackingCopied, setTrackingCopied] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const { id } = useParams();
 
+  const fetchOrders = async () => {
+    try {
+      const data = await apiFetch(`/orders/${id}`);
+      setOrder(data);
+    } catch (error) {
+      console.error(error);
+      toast.error("error obteniendo las ordenes.");
+    }
+  };
+
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const data = await apiFetch(`/orders/${id}`);
-        setOrder(data);
-      } catch (error) {
-        console.error(error);
-        toast.error("error fetching orders.");
-      }
-    };
     fetchOrders();
   }, [id]);
 
-  if (!order) return <p>Loading...</p>;
+  if (!order) return <PageLoader />;
 
   const copyTrackingNumber = () => {
     navigator.clipboard.writeText(order.shippingTrackingNumber!);
@@ -75,6 +79,21 @@ export default function OrderDetailPage() {
   const handlePayment = () => {
     if (order.init_point) {
       window.open(order.init_point, "_blank");
+    }
+  };
+
+  const handleRefund = async () => {
+    try {
+      setIsLoading(true);
+      await apiFetch(`/payment/refund/${id}`, {
+        method: "POST",
+      });
+      fetchOrders();
+    } catch (error) {
+      console.error(error);
+      toast.error("error rembolsando");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -92,17 +111,15 @@ export default function OrderDetailPage() {
         <div className="mb-8">
           <Link
             href="/orders"
-            className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
+            className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-4"
           >
             <ArrowLeft className="h-4 w-4" />
             Ir a Ordenes
           </Link>
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">
-                Order #{order.id}
-              </h1>
-              <p className="text-gray-600 mt-1">
+              <h1 className="text-3xl font-bold">Order #{order.id}</h1>
+              <p className="text-muted-foreground mt-1">
                 Creada {new Date(order.createdAt).toLocaleDateString()}
               </p>
             </div>
@@ -130,8 +147,13 @@ export default function OrderDetailPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
+            {order.status == "PAID" && (
+              <Button disabled={isLoading} onClick={handleRefund}>
+                {isLoading && <Spinner />}
+                Rembolsar
+              </Button>
+            )}
             {order.status !== "PAID" &&
               order.paymentStatus !== "COMPLETED" &&
               order.init_point && (
@@ -161,7 +183,7 @@ export default function OrderDetailPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Package className="h-5 w-5" />
+                  <Package className="size-5" />
                   Elementos de la orden
                 </CardTitle>
               </CardHeader>
@@ -172,7 +194,7 @@ export default function OrderDetailPage() {
                       key={item.id}
                       className="flex gap-4 p-4 border rounded-lg"
                     >
-                      <div className="relative h-20 w-20 flex-shrink-0">
+                      <div className="relative h-20 w-20 shrink-0">
                         <Image
                           src={
                             item.product.images[0] ||
@@ -184,18 +206,16 @@ export default function OrderDetailPage() {
                         />
                       </div>
                       <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900">
-                          {item.name}
-                        </h3>
-                        <p className="text-sm text-gray-600">SKU: {item.sku}</p>
-                        <div className="flex items-center gap-4 mt-2 text-sm text-gray-600">
+                        <h3 className="font-semibold">{item.name}</h3>
+                        <p className="text-sm">SKU: {item.sku}</p>
+                        <div className="flex items-center gap-4 mt-2 text-sm">
                           <span>Talla: {item.size}</span>
                           <span>Color: {item.color}</span>
                           <span>Cantidad: {item.quantity}</span>
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="font-semibold text-gray-900">
+                        <p className="font-semibold">
                           {(item.price * item.quantity).toLocaleString(
                             "en-US",
                             {
@@ -204,7 +224,7 @@ export default function OrderDetailPage() {
                             },
                           )}
                         </p>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm">
                           {item.price.toLocaleString("en-US", {
                             style: "currency",
                             currency: order.currency,
@@ -231,10 +251,10 @@ export default function OrderDetailPage() {
                     <div key={index} className="flex gap-4 items-center">
                       <div className="flex flex-col items-center">
                         <div
-                          className={`w-3 h-3 rounded-full ${index === order.history.length - 1 ? "bg-green-500" : "bg-gray-300"}`}
+                          className={`w-3 h-3 rounded-full ${index === order.history.length - 1 ? "bg-green-500" : "bg-muted"}`}
                         />
                         {index < order.history.length - 1 && (
-                          <div className="w-px h-8 bg-gray-200 mt-2" />
+                          <div className="w-px h-8 bg-muted mt-2" />
                         )}
                       </div>
                       <div className="flex-1 pb-4">
@@ -267,7 +287,7 @@ export default function OrderDetailPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Subtotal</span>
+                  <span className="text-muted-foreground">Subtotal</span>
                   <span>
                     {subtotal.toLocaleString("en-US", {
                       style: "currency",
@@ -276,11 +296,11 @@ export default function OrderDetailPage() {
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Shipping</span>
+                  <span className="text-muted-foreground">Shipping</span>
                   <span className="text-green-600">Gratis</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Tax (IVA 19%)</span>
+                  <span className="text-muted-foreground">Tax (IVA 19%)</span>
                   <span>
                     {tax.toLocaleString("en-US", {
                       style: "currency",
@@ -355,7 +375,7 @@ export default function OrderDetailPage() {
                       Numero de seguimiento
                     </p>
                     <div className="flex items-center gap-2">
-                      <code className="bg-gray-100 px-2 py-1 rounded text-sm font-mono">
+                      <code className="bg-muted px-2 py-1 rounded text-sm font-mono">
                         {order.shippingTrackingNumber}
                       </code>
                       <Button
@@ -374,7 +394,7 @@ export default function OrderDetailPage() {
                   </div>
                   {order.shippingNotes && (
                     <div>
-                      <p className="text-sm text-gray-600 mb-1">
+                      <p className="text-sm text-muted-foreground mb-1">
                         Notas de entrega
                       </p>
                       <p className="text-sm">{order.shippingNotes}</p>
@@ -394,7 +414,7 @@ export default function OrderDetailPage() {
               <CardContent>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Status</span>
+                    <span className="text-muted-foreground">Status</span>
                     <Badge
                       className={getStatusColor(order.paymentStatus)}
                       variant="secondary"
@@ -403,7 +423,7 @@ export default function OrderDetailPage() {
                     </Badge>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Method</span>
+                    <span className="text-muted-foreground">Method</span>
                     <span>Credit Card</span>
                   </div>
                 </div>

@@ -100,12 +100,17 @@ export function ProductsTable() {
                   {product.sku}
                 </TableCell>
                 <TableCell className="font-medium">{product.name}</TableCell>
-                <TableCell>${product.price}</TableCell>
+                <TableCell>
+                  {product.price.toLocaleString("en-US", {
+                    style: "currency",
+                    currency: "COP",
+                  })}
+                </TableCell>
                 <TableCell>
                   <Badge
                     variant={product.stock > 0 ? "default" : "destructive"}
                   >
-                    {product.stock} units
+                    {product.stock} unidades
                   </Badge>
                 </TableCell>
                 <TableCell>
@@ -138,13 +143,13 @@ export function ProductsTable() {
                       <Link href={`/dashboard/products/${product.id}`}>
                         <DropdownMenuItem>
                           <Eye className="mr-2 h-4 w-4" />
-                          View Details
+                          Ver Detalles
                         </DropdownMenuItem>
                       </Link>
                       <Link href={`/dashboard/products/${product.id}/edit`}>
                         <DropdownMenuItem>
                           <Edit className="mr-2 h-4 w-4" />
-                          Edit
+                          Editar
                         </DropdownMenuItem>
                       </Link>
                       <DropdownMenuItem
@@ -152,7 +157,7 @@ export function ProductsTable() {
                         className="text-destructive"
                       >
                         <Trash2 className="mr-2 h-4 w-4" />
-                        Delete
+                        Eliminar
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

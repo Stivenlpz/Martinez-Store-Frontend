@@ -13,6 +13,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import {
   Search,
   Package,
   Eye,
@@ -117,17 +125,17 @@ export default function OrdersPage() {
         {/* Orders List */}
         <div className="space-y-4">
           {filteredOrders.length === 0 ? (
-            <Card>
-              <CardContent className="p-12 text-center">
-                <Package className="size-12 mx-auto mb-4" />
-                <h3 className="text-lg font-medium mb-2">
-                  No se encontraron ordenes
-                </h3>
-                <p className="text-muted-foreground">
-                  Intenta ajustando tus criterios de busqueda.
-                </p>
-              </CardContent>
-            </Card>
+            <Empty className="border border-dashed">
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <Package />
+                </EmptyMedia>
+                <EmptyTitle>No hay Ordenes de Compra</EmptyTitle>
+                <EmptyDescription>
+                  Aqui se se listara el historial de compras.
+                </EmptyDescription>
+              </EmptyHeader>
+            </Empty>
           ) : (
             filteredOrders.map((order) => (
               <Card

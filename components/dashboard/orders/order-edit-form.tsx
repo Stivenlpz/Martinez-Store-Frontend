@@ -84,7 +84,6 @@ export function OrderEditForm({ orderId }: OrderEditFormProps) {
   const fetchOrder = async () => {
     try {
       const data = await apiFetch(`/orders/${orderId}`);
-      console.log(data);
       form.reset(data);
     } catch (error) {
       console.error("Error fetching order:", error);
@@ -98,11 +97,11 @@ export function OrderEditForm({ orderId }: OrderEditFormProps) {
         method: "PATCH",
         data: values,
       });
-      toast.success("Order updated successfully!");
+      toast.success("Orden actualizada exitosamente");
       router.push(`/dashboard/orders/${orderId}`);
     } catch (error) {
       console.error("Error updating order:", error);
-      toast.error("Failed to update order");
+      toast.error("Error al actualizar orden");
     } finally {
       setIsLoading(false);
     }

@@ -21,7 +21,6 @@ export function OrdersOverview() {
     const fetchOrders = async () => {
       try {
         const data = await apiFetch("/orders");
-        console.log(data);
         setOrders(data);
       } catch (error) {
         console.error(error);

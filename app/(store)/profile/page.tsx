@@ -32,6 +32,7 @@ import { AddressDialog } from "@/components/profile/address-dialog";
 import { AddressType, UserType } from "@/types/types";
 import { apiFetch } from "@/lib/api";
 import { useMarketStore } from "@/store/useMarketStore";
+import { PageLoader } from "@/components/layout/page-loader";
 
 export default function ProfilePage() {
   const { logout } = useMarketStore((state) => state);
@@ -106,7 +107,7 @@ export default function ProfilePage() {
     }
   };
 
-  if (!user) return <p>Loading...</p>;
+  if (!user) return <PageLoader />;
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-4xl my-36">

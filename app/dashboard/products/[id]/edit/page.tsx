@@ -16,12 +16,16 @@ export default function EditProductPage({ params }: EditProductPageProps) {
         <Link href={`/dashboard/products/${params.id}`}>
           <Button variant="outline" size="sm">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Product
+            Volver
           </Button>
         </Link>
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Edit Product</h1>
-          <p className="text-muted-foreground">Update product information</p>
+          <h1 className="text-3xl font-bold text-foreground">
+            Editar Producto
+          </h1>
+          <p className="text-muted-foreground">
+            Actualizar informacion del producto
+          </p>
         </div>
       </div>
 

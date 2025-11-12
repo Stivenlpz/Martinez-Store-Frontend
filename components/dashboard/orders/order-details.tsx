@@ -31,11 +31,11 @@ export function OrderDetails({ orderId }: Props) {
     const fetchOrder = async () => {
       try {
         const data = await apiFetch(`/orders/${orderId}`);
+        console.log(data);
         setOrder(data);
-        console.log("Fetching order:", orderId);
       } catch (error) {
         console.error("Error fetching order:", error);
-        toast.error("error fetching order.");
+        toast.error("Error pidiendo la orden");
       } finally {
         setIsLoading(false);
       }
@@ -236,7 +236,7 @@ export function OrderDetails({ orderId }: Props) {
               <div>
                 <h4 className="font-semibold mb-2 flex items-center gap-2">
                   <MapPin className="h-4 w-4" />
-                  Shipping Address
+                  Direccion de Envio
                 </h4>
                 <div className="text-sm space-y-1">
                   <div>{order.shippingAddress?.street}</div>

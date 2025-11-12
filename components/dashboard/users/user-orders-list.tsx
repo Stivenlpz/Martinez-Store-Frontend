@@ -67,7 +67,7 @@ export function UserOrdersList({ userId }: UserOrdersListProps) {
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch user orders
+  //TODO: Fetch user orders
   const fetchUserOrders = async () => {
     try {
       // const response = await fetch(`/api/users/${userId}/orders`)

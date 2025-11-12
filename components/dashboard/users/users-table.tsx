@@ -47,17 +47,6 @@ export function UsersTable() {
     }
   };
 
-  const deleteUser = async (id: string) => {
-    try {
-      const data = await apiFetch(`/users/${id}`, { method: "DELETE" });
-      setUsers(data);
-      toast.success("User deleted");
-    } catch (error) {
-      console.error("Error deleting user:", error);
-      toast.error("Error deleting user");
-    }
-  };
-
   const toggleActivation = async (id: string) => {
     try {
       await apiFetch(`/auth/activate/${id}`, { method: "PATCH" });
@@ -169,28 +158,21 @@ export function UsersTable() {
                       <Link href={`/dashboard/users/${user.id}`}>
                         <DropdownMenuItem>
                           <Eye className="mr-2 h-4 w-4" />
-                          View Details
+                          Ver Detalles
                         </DropdownMenuItem>
                       </Link>
                       <Link href={`/dashboard/users/${user.id}/edit`}>
                         <DropdownMenuItem>
                           <Edit className="mr-2 h-4 w-4" />
-                          Edit
+                          Editar
                         </DropdownMenuItem>
                       </Link>
                       <DropdownMenuItem
                         onClick={() => toggleActivation(user.id)}
                       >
                         <ToggleRight className="mr-2 h-4 w-4" />
-                        {user.activated ? "Deactivate" : "Activate"}
+                        {user.activated ? "Desactivar" : "Activar"}
                       </DropdownMenuItem>
-                      {/* <DropdownMenuItem */}
-                      {/*   onClick={() => deleteUser(user.id)} */}
-                      {/*   className="text-destructive" */}
-                      {/* > */}
-                      {/*   <Trash2 className="mr-2 h-4 w-4" /> */}
-                      {/*   Delete */}
-                      {/* </DropdownMenuItem> */}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>

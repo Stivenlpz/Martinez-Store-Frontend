@@ -37,8 +37,6 @@ export function UserDetails({ userId }: UserDetailsProps) {
       toast.loading("Loading user data...");
       const data = await apiFetch(`/users/${userId}`);
       setUser(data);
-      console.log("data", data);
-      console.log("Fetching user:", userId);
     } catch (error) {
       console.error("Error fetching user:", error);
       toast.error("Failed to load user data.");

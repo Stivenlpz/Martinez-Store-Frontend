@@ -48,25 +48,6 @@ export function OrdersTable() {
     }
   };
 
-  const updateOrderStatus = async (id: string, status: string) => {
-    try {
-      // const response = await fetch(`/api/orders/${id}/status`, {
-      //   method: 'PATCH',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ status })
-      // })
-      // if (response.ok) {
-      //   setOrders(orders.map(o => o.id === id ? { ...o, status } : o))
-      // }
-      // setOrders(orders.map((o) => (o.id === id ? { ...o, status } : o)));
-      console.log("Updating order status:", id, status);
-      toast.success("Order status updated, under development");
-    } catch (error) {
-      console.error("Error updating order status:", error);
-      toast.error("Error updating order status");
-    }
-  };
-
   useEffect(() => {
     fetchOrders();
   }, []);
@@ -181,7 +162,10 @@ export function OrdersTable() {
                 </TableCell>
                 <TableCell>{order.items.length} items</TableCell>
                 <TableCell className="font-medium">
-                  {order.currency} ${order.totalAmount}
+                  {order.totalAmount.toLocaleString("en-US", {
+                    style: "currency",
+                    currency: "COP",
+                  })}
                 </TableCell>
                 <TableCell>
                   <Badge variant={getStatusColor(order.status)}>
@@ -224,44 +208,15 @@ export function OrdersTable() {
                       <Link href={`/dashboard/orders/${order.id}`}>
                         <DropdownMenuItem>
                           <Eye className="mr-2 h-4 w-4" />
-                          View Details
+                          Ver Detalles
                         </DropdownMenuItem>
                       </Link>
                       <Link href={`/dashboard/orders/${order.id}/edit`}>
                         <DropdownMenuItem>
                           <Edit className="mr-2 h-4 w-4" />
-                          Edit Order
+                          Editar Orden
                         </DropdownMenuItem>
                       </Link>
-                      {order.status === "PENDING" && (
-                        <DropdownMenuItem
-                          onClick={() =>
-                            updateOrderStatus(order.id, "PROCESSING")
-                          }
-                        >
-                          Mark as Processing
-                        </DropdownMenuItem>
-                      )}
-                      {order.status === "PROCESSING" && (
-                        <DropdownMenuItem
-                          onClick={() =>
-                            updateOrderStatus(order.id, "COMPLETED")
-                          }
-                        >
-                          Mark as Completed
-                        </DropdownMenuItem>
-                      )}
-                      {order.status !== "CANCELLED" &&
-                        order.status !== "PAID" && (
-                          <DropdownMenuItem
-                            onClick={() =>
-                              updateOrderStatus(order.id, "CANCELLED")
-                            }
-                            className="text-destructive"
-                          >
-                            Cancel Order
-                          </DropdownMenuItem>
-                        )}
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>

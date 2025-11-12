@@ -62,7 +62,6 @@ export function ProductForm({ productId }: ProductFormProps) {
   const [newCategory, setNewCategory] = useState("");
   const [newSize, setNewSize] = useState("");
   const [newColor, setNewColor] = useState("");
-  const [newImage, setNewImage] = useState("");
 
   const form = useForm({
     resolver: zodResolver(productFormSchema),
@@ -87,7 +86,6 @@ export function ProductForm({ productId }: ProductFormProps) {
     try {
       const data = await apiFetch(`/products/${productId}`);
       form.reset(data);
-      console.log("Fetching product:", productId);
     } catch (error) {
       console.error("Error fetching product:", error);
       toast.error("Failed to load product data");
@@ -158,10 +156,9 @@ export function ProductForm({ productId }: ProductFormProps) {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Basic Information */}
           <Card>
             <CardHeader>
-              <CardTitle>Basic Information</CardTitle>
+              <CardTitle>Informacion Basica</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <FormField
@@ -173,7 +170,9 @@ export function ProductForm({ productId }: ProductFormProps) {
                     <FormControl>
                       <Input placeholder="PRODUCT-001" {...field} />
                     </FormControl>
-                    <FormDescription>Unique product identifier</FormDescription>
+                    <FormDescription>
+                      Identificador unico del producto
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -184,9 +183,12 @@ export function ProductForm({ productId }: ProductFormProps) {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Product Name</FormLabel>
+                    <FormLabel>Nombre del producto</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter product name" {...field} />
+                      <Input
+                        placeholder="Ingresa el nombre del producto"
+                        {...field}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -198,10 +200,10 @@ export function ProductForm({ productId }: ProductFormProps) {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>Descripcion</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Enter product description"
+                        placeholder="Ingresa la descripcion"
                         rows={4}
                         {...field}
                       />
@@ -217,7 +219,7 @@ export function ProductForm({ productId }: ProductFormProps) {
                   name="price"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Price ($)</FormLabel>
+                      <FormLabel>Precio</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
@@ -261,14 +263,14 @@ export function ProductForm({ productId }: ProductFormProps) {
                 name="gender"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Gender</FormLabel>
+                    <FormLabel>Genero</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select gender" />
+                          <SelectValue placeholder="Selecciona el genero" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -290,10 +292,10 @@ export function ProductForm({ productId }: ProductFormProps) {
                   <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                     <div className="space-y-0.5">
                       <FormLabel className="text-base">
-                        Featured Product
+                        Producto Destacado
                       </FormLabel>
                       <FormDescription>
-                        Display this product in featured sections
+                        Muestra este producto en la seccion destacados
                       </FormDescription>
                     </div>
                     <FormControl>
@@ -308,25 +310,23 @@ export function ProductForm({ productId }: ProductFormProps) {
             </CardContent>
           </Card>
 
-          {/* Categories, Sizes, Colors */}
           <Card>
             <CardHeader>
-              <CardTitle>Product Attributes</CardTitle>
+              <CardTitle>Atributos del producto</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Categories */}
               <FormField
                 control={form.control}
                 name="categories"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Categories</FormLabel>
+                    <FormLabel>Categorias</FormLabel>
                     <div className="flex gap-2">
                       <Input
                         value={newCategory}
                         onChange={(e) => setNewCategory(e.target.value)}
-                        placeholder="Add category"
-                        onKeyPress={(e) => {
+                        placeholder="Agegar categoria"
+                        onKeyDown={(e) => {
                           if (e.key === "Enter") {
                             e.preventDefault();
                             addArrayItem("categories", newCategory);
@@ -376,8 +376,8 @@ export function ProductForm({ productId }: ProductFormProps) {
                       <Input
                         value={newSize}
                         onChange={(e) => setNewSize(e.target.value)}
-                        placeholder="Add size"
-                        onKeyPress={(e) => {
+                        placeholder="Agregar tallas"
+                        onKeyDown={(e) => {
                           if (e.key === "Enter") {
                             e.preventDefault();
                             addArrayItem("sizes", newSize);
@@ -393,7 +393,7 @@ export function ProductForm({ productId }: ProductFormProps) {
                           setNewSize("");
                         }}
                       >
-                        <Plus className="h-4 w-4" />
+                        <Plus className="size-4" />
                       </Button>
                     </div>
                     <div className="flex flex-wrap gap-2">
@@ -405,7 +405,7 @@ export function ProductForm({ productId }: ProductFormProps) {
                         >
                           {size}
                           <X
-                            className="h-3 w-3 cursor-pointer"
+                            className="size-3 cursor-pointer"
                             onClick={() => removeArrayItem("sizes", index)}
                           />
                         </Badge>
@@ -427,8 +427,8 @@ export function ProductForm({ productId }: ProductFormProps) {
                       <Input
                         value={newColor}
                         onChange={(e) => setNewColor(e.target.value)}
-                        placeholder="Add color"
-                        onKeyPress={(e) => {
+                        placeholder="Agregar colores"
+                        onKeyDown={(e) => {
                           if (e.key === "Enter") {
                             e.preventDefault();
                             addArrayItem("colors", newColor);
@@ -467,7 +467,6 @@ export function ProductForm({ productId }: ProductFormProps) {
                 )}
               />
 
-              {/* Images */}
               <FormField
                 control={form.control}
                 name="images"
@@ -533,11 +532,11 @@ export function ProductForm({ productId }: ProductFormProps) {
         {/* Submit Button */}
         <div className="flex justify-end gap-4">
           <Button type="button" variant="outline" onClick={() => router.back()}>
-            Cancel
+            Cancelar
           </Button>
           <Button type="submit" disabled={isLoading}>
             {isLoading && <Loader2 className="size-4 animate-spin" />}
-            {productId ? "Update Product" : "Create Product"}
+            {productId ? "Actualizar Producto" : "Crear Producto"}
           </Button>
         </div>
       </form>

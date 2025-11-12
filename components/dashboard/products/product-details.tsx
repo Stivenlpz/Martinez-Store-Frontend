@@ -22,12 +22,12 @@ export function ProductDetails({ productId }: ProductDetailsProps) {
 
   const fetchProduct = async () => {
     try {
-      toast.loading("Loading product data...");
+      toast.loading("Cargando informacion del producto...");
       const data = await apiFetch(`/products/${productId}`);
       setProduct(data);
     } catch (error) {
       console.error("Error fetching product:", error);
-      toast.error("Failed to load product data");
+      toast.error("Error al cargar el producto");
     } finally {
       setIsLoading(false);
       toast.dismiss();
@@ -35,15 +35,15 @@ export function ProductDetails({ productId }: ProductDetailsProps) {
   };
 
   const deleteProduct = async () => {
-    if (!confirm("Are you sure you want to delete this product?")) return;
+    if (!confirm("Estas seguro de borrar el producto?")) return;
 
     try {
       await apiFetch(`/products/${productId}`, { method: "DELETE" });
       router.push("/dashboard/products");
-      toast.success("Product deleted successfully");
+      toast.success("Producto eliminado exitosamente");
     } catch (error) {
       console.error("Error deleting product:", error);
-      toast.error("Product deletion failed");
+      toast.error("Error al eliminar el producto");
     }
   };
 
@@ -64,7 +64,7 @@ export function ProductDetails({ productId }: ProductDetailsProps) {
       {/* Product Images */}
       <Card>
         <CardHeader>
-          <CardTitle>Product Images</CardTitle>
+          <CardTitle>Imagenes</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {product.images.map((image, index) => (
@@ -78,21 +78,20 @@ export function ProductDetails({ productId }: ProductDetailsProps) {
         </CardContent>
       </Card>
 
-      {/* Product Information */}
       <div className="lg:col-span-2 space-y-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Product Information</CardTitle>
+            <CardTitle>Informacion</CardTitle>
             <div className="flex gap-2">
               <Link href={`/dashboard/products/${productId}/edit`}>
                 <Button variant="outline" size="sm">
                   <Edit className="h-4 w-4 mr-2" />
-                  Edit
+                  Editar
                 </Button>
               </Link>
               <Button variant="destructive" size="sm" onClick={deleteProduct}>
                 <Trash2 className="h-4 w-4 mr-2" />
-                Delete
+                Eliminar
               </Button>
             </div>
           </CardHeader>
@@ -103,7 +102,7 @@ export function ProductDetails({ productId }: ProductDetailsProps) {
                 <p className="text-muted-foreground font-mono">{product.sku}</p>
               </div>
               <div>
-                <h3 className="font-semibold text-card-foreground">Price</h3>
+                <h3 className="font-semibold text-card-foreground">Precio</h3>
                 <p className="text-2xl font-bold text-card-foreground">
                   ${product.price}
                 </p>
@@ -128,12 +127,12 @@ export function ProductDetails({ productId }: ProductDetailsProps) {
                   Stock
                 </h3>
                 <Badge variant={product.stock > 0 ? "default" : "destructive"}>
-                  {product.stock} units
+                  {product.stock} unidades
                 </Badge>
               </div>
               <div>
                 <h3 className="font-semibold text-card-foreground mb-2">
-                  Gender
+                  Genero
                 </h3>
                 <Badge variant="outline">{product.gender}</Badge>
               </div>
@@ -141,7 +140,7 @@ export function ProductDetails({ productId }: ProductDetailsProps) {
 
             <div>
               <h3 className="font-semibold text-card-foreground mb-2">
-                Status
+                Estado
               </h3>
               <Badge variant={product.featured ? "default" : "secondary"}>
                 {product.featured ? "Featured" : "Regular"}
@@ -150,15 +149,14 @@ export function ProductDetails({ productId }: ProductDetailsProps) {
           </CardContent>
         </Card>
 
-        {/* Product Attributes */}
         <Card>
           <CardHeader>
-            <CardTitle>Product Attributes</CardTitle>
+            <CardTitle>Informacion Extra</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
               <h3 className="font-semibold text-card-foreground mb-2">
-                Categories
+                Categorias
               </h3>
               <div className="flex flex-wrap gap-2">
                 {product.categories.map((category) => (
@@ -171,7 +169,7 @@ export function ProductDetails({ productId }: ProductDetailsProps) {
 
             <div>
               <h3 className="font-semibold text-card-foreground mb-2">
-                Available Sizes
+                Tallas Disponibles
               </h3>
               <div className="flex flex-wrap gap-2">
                 {product.sizes.map((size) => (
@@ -184,7 +182,7 @@ export function ProductDetails({ productId }: ProductDetailsProps) {
 
             <div>
               <h3 className="font-semibold text-card-foreground mb-2">
-                Available Colors
+                Colores Disponibles
               </h3>
               <div className="flex flex-wrap gap-2">
                 {product.colors.map((color) => (
@@ -197,14 +195,14 @@ export function ProductDetails({ productId }: ProductDetailsProps) {
 
             <div className="grid grid-cols-2 gap-4 pt-4 border-t">
               <div>
-                <h3 className="font-semibold text-card-foreground">Created</h3>
+                <h3 className="font-semibold text-card-foreground">Creado</h3>
                 <p className="text-sm text-muted-foreground">
                   {new Date(product.createdAt).toLocaleDateString()}
                 </p>
               </div>
               <div>
                 <h3 className="font-semibold text-card-foreground">
-                  Last Updated
+                  Ultima Actualizacion
                 </h3>
                 <p className="text-sm text-muted-foreground">
                   {new Date(product.updatedAt!).toLocaleDateString()}
